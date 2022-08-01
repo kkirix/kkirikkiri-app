@@ -41,11 +41,6 @@ ktor = [
     "ktor-negotiation"
 ]
 
-decompose = [
-    "decompose-decompose",
-    "decompose-extension-compose"
-]
-
 mviKotlin = [
     "mviKotlin-mviKotlin",
     "mviKotlin-main",

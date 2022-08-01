@@ -10,7 +10,22 @@ version = "1.0"
 
 kotlin {
     android()
-    ios()
+
+    fun nativeTargetConfig(): org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget.() -> Unit = {
+        val nativeFrameworkPaths = projectDir.resolve("src/nativeInterop/cinterop")
+
+        binaries.all {
+            linkerOpts("-F$nativeFrameworkPaths")
+        }
+
+        compilations.getByName("main") {
+            cinterops.create("NaverThirdPartyLogin") {
+                compilerOpts("-F$nativeFrameworkPaths")
+                extraOpts = listOf("-compiler-option", "-DNS_FORMAT_ARGUMENT(A)=", "-verbose")
+            }
+        }
+    }
+    ios(configure = nativeTargetConfig())
 
     cocoapods {
         summary = "Some description for the Shared Module"
@@ -25,18 +40,19 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(deps.kotlinx.coroutines)
-                implementation(deps.kotlinx.serialization.json)
                 implementation(deps.koin.core)
+                implementation(deps.kotlinx.coroutines)
+                implementation(deps.decompose.decompose)
+                implementation(deps.kotlinx.serialization.json)
                 implementation(deps.bundles.ktor)
                 implementation(deps.bundles.mviKotlin)
-                implementation(deps.bundles.decompose)
             }
         }
         val androidMain by getting {
             dependencies {
-                implementation(deps.bundles.compose)
                 implementation(deps.ktor.okHttp)
+                implementation(deps.bundles.compose)
+                implementation(deps.decompose.extension.compose)
             }
         }
         val iosMain by getting {
