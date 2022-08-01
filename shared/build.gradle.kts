@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+
 plugins {
     kotlin("multiplatform")
     kotlin("native.cocoapods")
@@ -11,17 +13,12 @@ version = "1.0"
 kotlin {
     android()
 
-    fun nativeTargetConfig(): org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget.() -> Unit = {
+    fun nativeTargetConfig(): KotlinNativeTarget.() -> Unit = {
         val nativeFrameworkPaths = projectDir.resolve("src/nativeInterop/cinterop")
-
-        binaries.all {
-            linkerOpts("-F$nativeFrameworkPaths")
-        }
 
         compilations.getByName("main") {
             cinterops.create("NaverThirdPartyLogin") {
                 compilerOpts("-F$nativeFrameworkPaths")
-                extraOpts = listOf("-compiler-option", "-DNS_FORMAT_ARGUMENT(A)=", "-verbose")
             }
         }
     }
