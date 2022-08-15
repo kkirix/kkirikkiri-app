@@ -1,8 +1,8 @@
-package com.example.kkirikkiri.android
+package com.kkirrix.kkirikkiri.android
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.kkirikkiri.Greeting
+import com.kkirrix.kkirikkiri.Greeting
 import android.widget.TextView
 
 fun greet(): String {

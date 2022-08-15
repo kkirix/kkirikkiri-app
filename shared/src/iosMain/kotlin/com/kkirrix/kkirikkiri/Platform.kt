@@ -1,4 +1,4 @@
-package com.example.kkirikkiri
+package com.kkirrix.kkirikkiri
 
 import platform.UIKit.UIDevice
 

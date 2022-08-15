@@ -31,6 +31,7 @@ kotlin {
                 implementation(deps.bundles.ktor)
                 implementation(deps.bundles.mviKotlin)
                 implementation(deps.bundles.decompose)
+                implementation("com.durepark:naver-login-kotlin-sdk:1.0.0")
             }
         }
         val androidMain by getting {
