@@ -5,5 +5,6 @@ enum class Platform {
 }
 
 interface KRXLogin {
-    fun onLogin(platform: Platform)
+    fun onNaverLogin()
+    fun onKakaoLogin()
 }

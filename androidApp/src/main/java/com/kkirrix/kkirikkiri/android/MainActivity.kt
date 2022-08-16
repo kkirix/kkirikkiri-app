@@ -2,19 +2,18 @@ package com.kkirrix.kkirikkiri.android
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.kkirrix.kkirikkiri.Greeting
-import android.widget.TextView
-
-fun greet(): String {
-    return Greeting().greeting()
-}
+import androidx.activity.compose.setContent
+import com.arkivanov.decompose.defaultComponentContext
+import com.kkirrix.kkirikkiri.RootContent
+import com.kkirrix.kkirikkiri.presentation.root.RootComponent
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
-        val tv: TextView = findViewById(R.id.text_view)
-        tv.text = greet()
+        setContent {
+            val rootComponent = RootComponent(defaultComponentContext())
+            RootContent(component = rootComponent)
+        }
     }
 }

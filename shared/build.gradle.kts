@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     kotlin("multiplatform")
     kotlin("native.cocoapods")
@@ -50,10 +52,38 @@ kotlin {
 }
 
 android {
-    compileSdk = 32
+    compileSdk = 33
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {
         minSdk = 28
-        targetSdk = 32
+        targetSdk = 33
+    }
+    buildFeatures {
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = deps.versions.composeCompiler.get()
+    }
+}
+
+configurations {
+    create("composeCompiler") {
+        isCanBeConsumed = false
+    }
+}
+
+dependencies {
+    add("composeCompiler", "androidx.compose.compiler:compiler:${deps.versions.composeCompiler.get()}")
+}
+
+afterEvaluate {
+    val composeCompilerJar = project.configurations
+        .getByName("composeCompiler")
+        .resolve()
+        .firstOrNull()
+        ?: throw Exception("Please add \"androidx.compose.compiler:compiler\" (and only that) as a \"composeCompiler\" dependency")
+
+    project.tasks.withType<KotlinCompile> {
+        kotlinOptions.freeCompilerArgs += listOf("-Xuse-ir", "-Xplugin=$composeCompilerJar")
     }
 }

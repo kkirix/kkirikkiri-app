@@ -1,6 +1,7 @@
 package com.kkirrix.kkirikkiri.presentation.login
 
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.mvikotlin.core.binder.BinderLifecycleMode
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.bind
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
@@ -16,12 +17,13 @@ class LoginComponent(
     private val store: LoginStore = instanceKeeper.getStore(::get)
 
     init {
-        bind {
+        bind(lifecycle, BinderLifecycleMode.CREATE_DESTROY) {
             store.labels bindTo(::bindLabel)
         }
     }
 
-    override fun onLogin(platform: Platform) = store.accept(LoginStore.Intent.Login(platform))
+    override fun onNaverLogin() = store.accept(LoginStore.Intent.Login(Platform.NAVER))
+    override fun onKakaoLogin() = store.accept(LoginStore.Intent.Login(Platform.KAKAO))
 
     private fun bindLabel(label: LoginStore.Label) = when (label) {
         is LoginStore.Label.Success -> onLoginSuccess()

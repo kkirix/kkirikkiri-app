@@ -33,6 +33,7 @@ class LoginStoreImpl(
     executorFactory = coroutineExecutorFactory {
         onIntent<Intent.Login> {
             thirdPartyLogin(it.platform)
+            publish(Label.Success)
         }
     }
 )
