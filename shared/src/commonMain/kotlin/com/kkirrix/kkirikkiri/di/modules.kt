@@ -5,19 +5,20 @@ import org.koin.dsl.module
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.factoryOf
 import com.arkivanov.mvikotlin.core.store.StoreFactory
+import com.arkivanov.mvikotlin.core.utils.ExperimentalMviKotlinApi
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.kkirrix.kkirikkiri.presentation.login.store.LoginStore
 import com.kkirrix.kkirikkiri.presentation.login.store.LoginStoreImpl
-import com.kkirrix.kkirikkiri.domain.repository.ThirdPartyRepository
-import com.kkirrix.kkirikkiri.domain.interactor.ThirdPartyLoginUseCase
-import com.kkirrix.kkirikkiri.data.repository.ThirdPartyRepositoryImpl
+import com.kkirrix.kkirikkiri.domain.repository.UserRepository
+import com.kkirrix.kkirikkiri.domain.interactor.LoginUseCase
+import com.kkirrix.kkirikkiri.data.repository.UserRepositoryImpl
 
 val repositoryModule = module {
-    singleOf(::ThirdPartyRepositoryImpl) bind ThirdPartyRepository::class
+    singleOf(::UserRepositoryImpl) bind UserRepository::class
 }
 
 val interactorModule = module {
-    singleOf(::ThirdPartyLoginUseCase)
+    singleOf(::LoginUseCase)
 }
 
 val storeModule = module {

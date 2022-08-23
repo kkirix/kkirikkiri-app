@@ -1,10 +1,20 @@
 package com.kkirrix.kkirikkiri.presentation.login
 
-enum class Platform {
-    NAVER, KAKAO
-}
+import com.arkivanov.decompose.value.Value
 
 interface KRXLogin {
-    fun onNaverLogin()
-    fun onKakaoLogin()
+
+    val model: Value<Model>
+
+    data class Model(
+        val email: String,
+        val password: String
+    ) {
+        val isAvailableLogin: Boolean
+            get() = email.isNotBlank() && password.isNotBlank()
+    }
+
+    fun onLogin()
+    fun onEmailChanged(newEmail: String)
+    fun onPasswdChanged(newPasswd: String)
 }
