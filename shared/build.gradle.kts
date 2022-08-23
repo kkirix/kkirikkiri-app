@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
     kotlin("multiplatform")
@@ -12,7 +13,12 @@ version = "1.0"
 
 kotlin {
     android()
-    ios()
+    val iosTarget: (String, KotlinNativeTarget.() -> Unit) -> KotlinNativeTarget = when {
+        System.getenv("SDK_NAME")?.startsWith("iphoneos") == true -> ::iosArm64
+        System.getenv("NATIVE_ARCH")?.startsWith("arm") == true -> ::iosSimulatorArm64
+        else -> ::iosX64
+    }
+    iosTarget("ios") {}
 
     cocoapods {
         summary = "Some description for the Shared Module"
@@ -20,10 +26,13 @@ kotlin {
         ios.deploymentTarget = "14.1"
         podfile = project.file("../iosApp/Podfile")
         framework {
+            export(deps.decompose.decompose)
+            linkerOpts.add("-lsqlite3")
+            transitiveExport = true
             baseName = "shared"
         }
     }
-    
+
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -32,7 +41,7 @@ kotlin {
                 implementation(deps.koin.core)
                 implementation(deps.bundles.ktor)
                 implementation(deps.bundles.mviKotlin)
-                implementation(deps.bundles.decompose)
+                api(deps.bundles.decompose)
             }
         }
         getByName("androidMain").dependencies {
