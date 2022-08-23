@@ -1,24 +1,20 @@
 package com.kkirrix.kkirikkiri.login
 
-import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
-import com.kkirrix.kkirikkiri.R
 import com.kkirrix.kkirikkiri.component.TitleTextField
-import com.kkirrix.kkirikkiri.presentation.login.KRXLogin
+import com.kkirrix.kkirikkiri.presentation.register.KRXRegister
 
 @Composable
-fun LoginContent(component: KRXLogin) {
+fun RegisterContent(component: KRXRegister) {
     val model by component.model.subscribeAsState()
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -26,13 +22,12 @@ fun LoginContent(component: KRXLogin) {
             .fillMaxSize(0.88f)
             .align(Alignment.Center)
         ) {
-            LoginLogo()
+            RegisterLogo()
             Spacer(modifier = Modifier.height(56.dp))
             TitleTextField(
                 title = "Email Address",
                 value = model.email,
-                onValueChange = component::onEmailChanged,
-                trailingIcon = { if (model.email.isNotBlank()) ValidIcon(isValid = model.isValidEmail) }
+                onValueChange = component::onEmailChanged
             )
             Spacer(modifier = Modifier.height(36.dp))
             TitleTextField(
@@ -42,39 +37,26 @@ fun LoginContent(component: KRXLogin) {
             )
             Spacer(modifier = Modifier.height(72.dp))
             Button(
-                onClick = component::onLogin,
-                enabled = model.isAvailableLogin,
+                onClick = component::onConfirm,
+                enabled = model.isAvailableConfirm,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = "Login")
+                Text(text = "Create Account")
             }
-            Spacer(modifier = Modifier.height(36.dp))
-            Text(
-                text = "Create Account",
-                fontSize = 18.sp,
-                modifier = Modifier.align(Alignment.CenterHorizontally).clickable(enabled = true, onClick = component::onCreateAccount)
-            )
         }
     }
 }
 
 @Composable
-private fun LoginLogo() {
+private fun RegisterLogo() {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(
-            text = "Login",
+            text = "Create Account",
             fontSize = 24.sp
         )
         Text(
-            text = "Login to get started",
+            text = "Sign up to get started",
             fontSize = 14.sp
         )
-    }
-}
-
-@Composable
-private fun ValidIcon(isValid: Boolean) {
-    Crossfade(targetState = isValid) {
-        if (!it) Image(painter = painterResource(id = R.drawable.ic_invalid), contentDescription = null)
     }
 }

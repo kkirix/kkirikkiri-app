@@ -13,7 +13,7 @@ import org.koin.core.component.get
 
 class LoginComponent(
     componentContext: ComponentContext,
-    private val onLoginSuccess: () -> Unit
+    private val onOutput: (KRXLogin.Output) -> Unit
 ) : KRXLogin, KoinComponent, ComponentContext by componentContext {
 
     private val store: LoginStore = instanceKeeper.getStore(::get)
@@ -22,7 +22,7 @@ class LoginComponent(
 
     init {
         bind(lifecycle, BinderLifecycleMode.CREATE_DESTROY) {
-            store.labels bindTo(::bindLabel)
+            store.labels bindTo ::bindLabel
         }
     }
 
@@ -38,8 +38,12 @@ class LoginComponent(
         store.accept(LoginStore.Intent.Login)
     }
 
+    override fun onCreateAccount() {
+        onOutput(KRXLogin.Output.NavigateToRegister)
+    }
+
     private fun bindLabel(label: LoginStore.Label) = when (label) {
-        is LoginStore.Label.Success -> onLoginSuccess()
+        is LoginStore.Label.Success -> onOutput(KRXLogin.Output.LoginSuccess)
         is LoginStore.Label.Failure -> Unit
     }
 }

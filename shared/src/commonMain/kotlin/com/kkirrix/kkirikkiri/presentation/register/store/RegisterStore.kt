@@ -1,21 +1,20 @@
-package com.kkirrix.kkirikkiri.presentation.login.store
+package com.kkirrix.kkirikkiri.presentation.register.store
 
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.core.utils.ExperimentalMviKotlinApi
 import com.arkivanov.mvikotlin.extensions.coroutines.coroutineExecutorFactory
-import com.kkirrix.kkirikkiri.domain.interactor.LoginUseCase
-import com.kkirrix.kkirikkiri.presentation.login.KRXLogin.Model
-import com.kkirrix.kkirikkiri.presentation.login.store.LoginStore.Intent
-import com.kkirrix.kkirikkiri.presentation.login.store.LoginStore.Label
-import kotlinx.coroutines.launch
+import com.kkirrix.kkirikkiri.presentation.register.KRXRegister.Model
+import com.kkirrix.kkirikkiri.presentation.register.store.RegisterStore.Intent
+import com.kkirrix.kkirikkiri.presentation.register.store.RegisterStore.Label
 
-interface LoginStore : Store<Intent, Model, Label> {
+interface RegisterStore : Store<Intent, Model, Label> {
 
     sealed class Intent {
         data class EmailInput(val newEmail: String) : Intent()
         data class PasswdInput(val newPasswd: String) : Intent()
-        object Login : Intent()
+        data class NicknameInput(val newNickname: String) : Intent()
+        object Confirm : Intent()
     }
 
     sealed class Label {
@@ -25,11 +24,10 @@ interface LoginStore : Store<Intent, Model, Label> {
 }
 
 @OptIn(ExperimentalMviKotlinApi::class)
-class LoginStoreImpl(
-    storeFactory: StoreFactory,
-    private val login: LoginUseCase
-) : LoginStore, Store<Intent, Model, Label> by storeFactory.create(
-    initialState = Model("", ""),
+class RegisterStoreImpl(
+    storeFactory: StoreFactory
+) : RegisterStore, Store<Intent, Model, Label> by storeFactory.create(
+    initialState = Model("", "", "", ""),
     executorFactory = coroutineExecutorFactory {
         onIntent<Intent.EmailInput> {
             dispatch(Message.EmailChanged(it.newEmail))
@@ -37,23 +35,24 @@ class LoginStoreImpl(
         onIntent<Intent.PasswdInput> {
             dispatch(Message.PasswdChanged(it.newPasswd))
         }
-        onIntent<Intent.Login> {
-            launch {
-                val result = login(state.email, state.password)
-                val label = if (result.isSuccess) Label.Success else Label.Failure
-                publish(label)
-            }
+        onIntent<Intent.NicknameInput> {
+            dispatch(Message.NicknameChanged(it.newNickname))
+        }
+        onIntent<Intent.Confirm> {
+            publish(Label.Success)
         }
     },
     reducer = { msg: Message ->
         when (msg) {
             is Message.EmailChanged -> copy(email = msg.newEmail)
             is Message.PasswdChanged -> copy(password = msg.newPasswd)
+            is Message.NicknameChanged -> copy(nickname = msg.newNickname)
         }
     }
 ) {
     private sealed class Message {
         data class EmailChanged(val newEmail: String) : Message()
         data class PasswdChanged(val newPasswd: String) : Message()
+        data class NicknameChanged(val newNickname: String) : Message()
     }
 }
