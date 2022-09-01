@@ -1,5 +1,5 @@
 [versions]
-decompose = "1.0.0-alpha-02"
+decompose = "1.0.0-alpha-04"
 agp = "7.2.2"
 kotlin = "1.7.10"
 serialization = "1.3.3"

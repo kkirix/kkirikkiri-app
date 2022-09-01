@@ -13,10 +13,10 @@ pluginManagement {
         google()
         gradlePluginPortal()
         mavenCentral()
-        mavenLocal()
     }
 }
 
 rootProject.name = "kkirikkiri"
-include(":androidApp")
-include(":shared")
+
+val modules = arrayOf(":androidApp", ":shared")
+include(*modules)
