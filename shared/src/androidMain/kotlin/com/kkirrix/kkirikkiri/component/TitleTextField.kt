@@ -9,6 +9,7 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -17,6 +18,7 @@ fun TitleTextField(
     title: String,
     value: String,
     onValueChange: (String) -> Unit,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
     trailingIcon: @Composable (() -> Unit)? = null
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -26,6 +28,7 @@ fun TitleTextField(
             onValueChange = onValueChange,
             trailingIcon = trailingIcon,
             modifier = Modifier.fillMaxWidth(),
+            visualTransformation = visualTransformation,
             colors = TextFieldDefaults.textFieldColors(
                 backgroundColor = Color(0xFFF6F6F6)
             )

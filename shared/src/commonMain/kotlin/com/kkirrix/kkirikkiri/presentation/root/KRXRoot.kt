@@ -7,6 +7,7 @@ import com.kkirrix.kkirikkiri.presentation.main.KRXMain
 import com.kkirrix.kkirikkiri.presentation.register.KRXRegister
 
 interface KRXRoot {
+
     val childStack: Value<ChildStack<*, Child>>
 
     sealed interface Child {

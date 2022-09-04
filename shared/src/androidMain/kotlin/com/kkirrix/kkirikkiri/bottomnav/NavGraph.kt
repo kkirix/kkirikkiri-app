@@ -7,16 +7,19 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.kkirrix.kkirikkiri.category.categoryGraph
+import com.kkirrix.kkirikkiri.gathering.gatheringGraph
 import com.kkirrix.kkirikkiri.presentation.main.KRXMain
 
 sealed class Direction(val route: String) {
-    object Club : Direction("Club")
+    object Category: Direction("Category")
+    object Gathering : Direction("Gathering")
     object Search : Direction("Search")
     object Profile : Direction("Profile")
 }
@@ -25,7 +28,8 @@ sealed class Direction(val route: String) {
 fun BottomNavContent(component: KRXMain) {
     val navController = rememberNavController()
     val items = listOf(
-        Icons.Default.Home to Direction.Club.route,
+        Icons.Default.List to Direction.Category.route,
+        Icons.Default.Home to Direction.Gathering.route,
         Icons.Default.Search to Direction.Search.route,
         Icons.Default.Person to Direction.Profile.route
     )
@@ -36,18 +40,10 @@ fun BottomNavContent(component: KRXMain) {
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentRoute = navBackStackEntry?.destination?.route
 
-                fun navigate(route: String) = navController.navigate(route) {
-                    launchSingleTop = true
-                    restoreState = true
-                    popUpTo(navController.graph.findStartDestination().id) {
-                        saveState = true
-                    }
-                }
-
                 items.forEach { (icon, route) ->
                     BottomNavigationItem(
                         selected = currentRoute == route,
-                        onClick = { navigate(route) },
+                        onClick = { navigate(navController, route) },
                         icon = { Icon(imageVector = icon, contentDescription = null) }
                     )
                 }
@@ -57,7 +53,7 @@ fun BottomNavContent(component: KRXMain) {
         NavHost(
             modifier = Modifier.padding(it),
             navController = navController,
-            startDestination = Direction.Search.route
+            startDestination = Direction.Category.route
         ) {
             addComposableDestinations(component)
         }
@@ -65,13 +61,21 @@ fun BottomNavContent(component: KRXMain) {
 }
 
 private fun NavGraphBuilder.addComposableDestinations(component: KRXMain) {
-    composable(Direction.Club.route) {
-        Text("Club")
-    }
+    categoryGraph(component.categoryChildStack)
+    gatheringGraph(component.gatheringChildStack)
     composable(Direction.Search.route) {
         Text("Search")
     }
     composable(Direction.Profile.route) {
         Text("Profile")
+    }
+}
+
+private fun navigate(navController: NavController, route: String) = navController.navigate(route) {
+    launchSingleTop = true
+    restoreState = true
+    popUpTo(navController.currentDestination?.id?: navController.graph.startDestinationId) {
+        inclusive = true
+        saveState = true
     }
 }

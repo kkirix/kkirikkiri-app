@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
@@ -33,7 +34,8 @@ fun RegisterContent(component: KRXRegister) {
             TitleTextField(
                 title = "Password",
                 value = model.password,
-                onValueChange = component::onPasswdChanged
+                onValueChange = component::onPasswdChanged,
+                visualTransformation = PasswordVisualTransformation()
             )
             Spacer(modifier = Modifier.height(72.dp))
             Button(

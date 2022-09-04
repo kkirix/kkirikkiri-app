@@ -14,7 +14,7 @@ fun <T: Any> Store<*, T, *>.asValue() = object : Value<T>() {
 
     override fun subscribe(observer: (T) -> Unit) {
         job?.cancel()
-        job = CoroutineScope(Dispatchers.Main.immediate).launch {
+        job = CoroutineScope(Dispatchers.Main.immediate + Job()).launch {
             states.collect(observer)
         }
     }
