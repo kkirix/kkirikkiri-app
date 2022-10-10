@@ -1,0 +1,4 @@
+language = Objective-C
+package = kotlin.naver.login
+modules = NaverThirdPartyLogin
+compilerOpts = -framework NaverThirdPartyLogin

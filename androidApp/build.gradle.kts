@@ -28,8 +28,6 @@ android {
 dependencies {
     implementation(project(":shared"))
     implementation("com.google.android.material:material:1.6.1")
-    implementation("androidx.appcompat:appcompat:1.5.0")
+    implementation("androidx.appcompat:appcompat:1.5.1")
     implementation(deps.activity.compose)
-    implementation(deps.decompose.decompose)
-    implementation(deps.koin.core)
 }

@@ -3,7 +3,6 @@
     package="com.kkirrix.kkirikkiri.android">
 
     <application
-        android:name=".MainApplication"
         android:allowBackup="false"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
